@@ -1,0 +1,24 @@
+{
+  "format_version": "1.19.80",
+  "minecraft:attachable": {
+    "description": {
+      "identifier": "smart_glasses:smart_glasses.player",
+      "item": { "smart_glasses:smart_glasses": "query.is_owner_identifier_any('minecraft:player')" },
+      "materials": {
+        "default": "armor",
+        "enchanted": "armor_enchanted"
+      },
+      "textures": {
+        "default": "textures/items/smart_glasses_minecraft",
+        "enchanted": "textures/misc/enchanted_item_glint"
+      },
+      "geometry": {
+        "default": "geometry.smart_glasses"
+      },
+      "scripts": {
+        "parent_setup": "variable.helmet_layer_visible = 0.0;"
+      },
+      "render_controllers": ["controller.render.armor"]
+    }
+  }
+}

@@ -1,8 +1,8 @@
 # Smart Glasses
 
-Im
+Implementation of Smart Glasses Addon for Minecraft.
 
-**WARNING: This mod is work in progress and is not ready for use.**
+**WARNING: This addon is work in progress and is not ready for use.**
 
 ## Features
 

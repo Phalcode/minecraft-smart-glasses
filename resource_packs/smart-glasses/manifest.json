@@ -1,8 +1,8 @@
 {
   "format_version": 2,
   "header": {
-    "name": "Smart Glasses Mod - Resource Pack",
-    "description": "Smart Glasses Mod for Minecraft",
+    "name": "Smart Glasses - Resource Pack",
+    "description": "Smart Glasses Addon for Minecraft",
     "uuid": "c4bc9d09-4e95-4e1c-9c7d-0f1e2ac4fb39",
     "version": [1, 0, 0],
     "min_engine_version": [1, 21, 0]
