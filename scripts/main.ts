@@ -1,14 +1,14 @@
-import { system, world, Player, Entity, EquipmentSlot } from "@minecraft/server";
+import { Block, Entity, EquipmentSlot, Player, system, world } from "@minecraft/server";
 
 // Config
 const MAX_DISTANCE = 4;
-const INTERVAL_TICKS = 2;//50ms per tick
+const INTERVAL_TICKS = 2; // 50ms per tick
 const ONLY_WHEN_CHANGED = true;
 const LOG_WHEN_NONE = false;
 const STEP = 0.25;
 const EYE_HEIGHT = 1.62;
 const SKIP_IF_STATIONARY = true;
-const REQUIRED_HELMET_TYPE = "smart_glasses:smart_glasses"; // Only run logic when player wears this
+const REQUIRED_HELMET_TYPE = "smart_glasses:smart_glasses";
 
 const PASS_THROUGH_SET = new Set([
   "minecraft:air",
@@ -22,82 +22,162 @@ function isPassThrough(typeId: string): boolean {
   return PASS_THROUGH_SET.has(typeId);
 }
 
+function getHelmetFromEquip(equip: any): any | null {
+  const helmetKeys = [EquipmentSlot.Head, "head", "slot.armor.head"];
+  for (const key of helmetKeys) {
+    try {
+      const head = equip.getEquipment?.(key);
+      if (head) return head;
+    } catch {}
+  }
+  return null;
+}
+
 function hasRequiredHelmet(player: Player): boolean {
   const equip: any = (player as any).getComponent?.("minecraft:equippable");
   if (!equip) return false;
 
-  let head: any = null;
-  let tried: string[] = [];
-  try {
-    head = equip.getEquipment?.(EquipmentSlot.Head);
-    tried.push("EquipmentSlot.Head");
-  } catch (e: any) {
-     return false;
-    //console.warn(`[TargetSight] Helmet check: EquipmentSlot.Head failed: ${e?.message || e}`);
-  }
-  
-  if (!head) {
-    try {
-      head = equip.getEquipment?.("head");
-      tried.push("head");
-    } catch (e: any) {
-      return false;
-      //console.warn(`[TargetSight] Helmet check: 'head' failed: ${e?.message || e}`);
-    }
-  }
-  
-  if (!head) {
-    try {
-      head = equip.getEquipment?.("slot.armor.head");
-      tried.push("slot.armor.head");
-    } catch (e: any) {
-       return false;
-      //console.warn(`[TargetSight] Helmet check: 'slot.armor.head' failed: ${e?.message || e}`);
-    }
-  }
+  const head = getHelmetFromEquip(equip);
+  if (!head) return false;
 
-  if (!head) {
-    return false;
-  }
-
-  const ok = head.typeId === REQUIRED_HELMET_TYPE;
-  // console.warn(head.typeId, REQUIRED_HELMET_TYPE);
-  return ok;
+  return head.typeId === REQUIRED_HELMET_TYPE;
 }
 
 const lastHit = new Map<string, string | null>();
-interface LastState { x: number; y: number; z: number; dx: number; dy: number; dz: number; }
+interface LastState {
+  x: number;
+  y: number;
+  z: number;
+  dx: number;
+  dy: number;
+  dz: number;
+}
 const lastPlayerState = new Map<string, LastState>();
 
-function formatBlock(block: any): string {
-  return `${block.typeId} @ ${block.location.x},${block.location.y},${block.location.z}`;
+function formatBlock(block: Block): string {
+  return `${formatTypeId(block.typeId)} @ ${block.location.x},${block.location.y},${block.location.z}`;
 }
 
 function formatEntity(entity: Entity): string {
-  const loc = entity.location;
-  return `${entity.typeId} @ ${Math.floor(loc.x)},${Math.floor(loc.y)},${Math.floor(loc.z)}`;
+  return `${formatTypeId(entity.typeId)} ${formatEntityHealth(entity)}`;
+}
+
+function formatEntityHealth(entity: Entity): string {
+  const healthComponent = entity.getComponent("minecraft:health");
+  if (!healthComponent) {
+    return "(No HP)";
+  }
+  const currentHealth = Math.round(healthComponent.currentValue);
+  const maxHealth = Math.round(healthComponent.defaultValue);
+  return `(${currentHealth}/${maxHealth} HP)`;
+}
+
+function formatTypeId(id: string): string {
+  const [namespace, key] = id.split(":");
+  if (!namespace || !key) return id;
+
+  // Convert underscore-separated words to Title Case with spaces
+  const formattedKey = key
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+  // Convert namespace underscores to spaces, each word capitalized
+  const formattedNamespace = namespace
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+  return `${formattedKey} (${formattedNamespace})`;
 }
 
 function isPointInsideEntity(entity: Entity, x: number, y: number, z: number): boolean {
   const loc = entity.location;
   const half = 0.4;
-  const minX = loc.x - half;
-  const maxX = loc.x + half;
-  const minZ = loc.z - half;
-  const maxZ = loc.z + half;
-  const minY = loc.y;
-  const maxY = loc.y + 2; // tall mobs up to ~2 blocks
-  return x >= minX && x <= maxX && z >= minZ && z <= maxZ && y >= minY && y <= maxY;
+  return (
+    x >= loc.x - half && x <= loc.x + half && z >= loc.z - half && z <= loc.z + half && y >= loc.y && y <= loc.y + 2
+  );
+}
+
+function hasPlayerMovedOrRotated(
+  player: Player,
+  dx: number,
+  dy: number,
+  dz: number,
+  ox: number,
+  oy: number,
+  oz: number
+): boolean {
+  const prev = lastPlayerState.get(player.id);
+  if (!prev) return true;
+
+  const moved = prev.x !== ox || prev.y !== oy - EYE_HEIGHT || prev.z !== oz;
+  const rotated = prev.dx !== dx || prev.dy !== dy || prev.dz !== dz;
+  return moved || rotated;
+}
+
+function updatePlayerState(
+  player: Player,
+  dx: number,
+  dy: number,
+  dz: number,
+  ox: number,
+  oy: number,
+  oz: number
+): void {
+  lastPlayerState.set(player.id, { x: ox, y: oy - EYE_HEIGHT, z: oz, dx, dy, dz });
+}
+
+function findHitEntity(
+  player: Player,
+  nearbyEntities: Entity[],
+  ox: number,
+  oy: number,
+  oz: number,
+  dx: number,
+  dy: number,
+  dz: number,
+  px: number,
+  py: number,
+  pz: number
+): Entity | null {
+  for (const ent of nearbyEntities) {
+    if (ent.id === player.id) continue;
+    const ex = ent.location.x;
+    const ey = ent.location.y + 1; // eye height adjustment
+    const ez = ent.location.z;
+
+    const vx = ex - ox;
+    const vy = ey - oy;
+    const vz = ez - oz;
+
+    const proj = vx * dx + vy * dy + vz * dz;
+    if (proj < 0) continue;
+
+    const lateralSq = vx * vx + vy * vy + vz * vz - proj * proj;
+    if (lateralSq > 0.5) continue;
+
+    if (isPointInsideEntity(ent, px, py, pz)) {
+      return ent;
+    }
+  }
+  return null;
+}
+
+function findHitBlock(player: Player, px: number, py: number, pz: number): any | null {
+  const bx = Math.floor(px);
+  const by = Math.floor(py);
+  const bz = Math.floor(pz);
+  const block = player.dimension.getBlock({ x: bx, y: by, z: bz });
+  if (!block || isPassThrough(block.typeId)) return null;
+  return block;
 }
 
 system.runInterval(() => {
   for (const player of world.getPlayers()) {
     try {
-      if (!hasRequiredHelmet(player)) {
-        // Optionally uncomment to debug filtering:
-        // console.warn(`[TargetSight] Skipping ${player.name} (no iron helmet).`);
-        continue;
-      }
+      if (!hasRequiredHelmet(player)) continue;
+
       const dir = player.getViewDirection();
       const eye = player.location;
       const ox = eye.x;
@@ -107,23 +187,17 @@ system.runInterval(() => {
       const dy = dir.y;
       const dz = dir.z;
 
-      if (SKIP_IF_STATIONARY) {
-        const prevState = lastPlayerState.get(player.id);
-        if (prevState) {
-          const moved = (prevState.x !== ox) || (prevState.y !== oy - EYE_HEIGHT) || (prevState.z !== oz);
-          const rotated = (prevState.dx !== dx) || (prevState.dy !== dy) || (prevState.dz !== dz);
-          if (!moved && !rotated && ONLY_WHEN_CHANGED) {
-            continue;
-          }
-        }
-        lastPlayerState.set(player.id, { x: ox, y: oy - EYE_HEIGHT, z: oz, dx, dy, dz });
+      if (SKIP_IF_STATIONARY && ONLY_WHEN_CHANGED && !hasPlayerMovedOrRotated(player, dx, dy, dz, ox, oy, oz)) {
+        continue;
       }
-
-      let hitBlock: any = null;
-      let hitEntity: Entity | null = null;
+      updatePlayerState(player, dx, dy, dz, ox, oy, oz);
 
       const steps = Math.ceil(MAX_DISTANCE / STEP);
       const nearbyEntities = player.dimension.getEntities({ location: player.location, maxDistance: MAX_DISTANCE + 2 });
+
+      let hitEntity: Entity | null = null;
+      let hitBlock: any = null;
+
       for (let i = 0; i <= steps; i++) {
         const dist = i * STEP;
         const px = ox + dx * dist;
@@ -131,37 +205,19 @@ system.runInterval(() => {
         const pz = oz + dz * dist;
 
         if (!hitEntity) {
-          for (const ent of nearbyEntities) {
-            if (ent.id === player.id) continue;
-            const ex = ent.location.x;
-            const ey = ent.location.y + 1;
-            const ez = ent.location.z;
-            const vx = ex - ox;
-            const vy = ey - oy;
-            const vz = ez - oz;
-            const proj = vx * dx + vy * dy + vz * dz;
-            if (proj < 0) continue;
-            const lateralSq = (vx * vx + vy * vy + vz * vz) - proj * proj;
-            if (lateralSq > 0.5) continue;
-            if (isPointInsideEntity(ent, px, py, pz)) {
-              hitEntity = ent;
-              break;
-            }
-          }
+          hitEntity = findHitEntity(player, nearbyEntities, ox, oy, oz, dx, dy, dz, px, py, pz);
         }
 
-        const bx = Math.floor(px);
-        const by = Math.floor(py);
-        const bz = Math.floor(pz);
-        const b = player.dimension.getBlock({ x: bx, y: by, z: bz });
-        if (!b) continue;
-        if (isPassThrough(b.typeId)) continue;
-        hitBlock = b;
-        break;
+        if (!hitBlock) {
+          hitBlock = findHitBlock(player, px, py, pz);
+        }
+
+        if (hitEntity || hitBlock) break;
       }
 
       const prev = lastHit.get(player.id) ?? null;
       let current: string | null = null;
+
       if (hitEntity) {
         current = `ENTITY:${hitEntity.typeId}`;
       } else if (hitBlock) {
@@ -172,24 +228,29 @@ system.runInterval(() => {
 
       if (current) {
         if (hitEntity) {
-          console.warn(`[TargetSight] ${player.name} -> Entity ${formatEntity(hitEntity)}`);
+          console.warn(`[Smart Glasses] ${player.name} -> ${formatEntity(hitEntity)}`);
         } else if (hitBlock) {
-          console.warn(`[TargetSight] ${player.name} -> Block ${formatBlock(hitBlock)}`);
+          console.warn(`[Smart Glasses] ${player.name} -> ${formatBlock(hitBlock)}`);
         }
-      } else if (LOG_WHEN_NONE) {
-        if (prev !== null) console.warn(`[TargetSight] ${player.name} -> (nothing)`);
+      } else if (LOG_WHEN_NONE && prev !== null) {
+        console.warn(`[Smart Glasses] ${player.name} -> (nothing)`);
       }
+
       lastHit.set(player.id, current);
     } catch (e) {
-      console.error(`[TargetSight] Error for ${player.name}: ${(e as Error).message}`);
+      console.error(`[Smart Glasses] Error for ${player.name}: ${(e as Error).message}`);
     }
   }
 }, INTERVAL_TICKS);
 
-console.warn(`[TargetSight] Initialized (maxDist=${MAX_DISTANCE}, step=${STEP}, interval=${INTERVAL_TICKS}, onlyChanged=${ONLY_WHEN_CHANGED}).`);
+console.warn(
+  `[Smart Glasses] Initialized (maxDist=${MAX_DISTANCE}, step=${STEP}, interval=${INTERVAL_TICKS}, onlyChanged=${ONLY_WHEN_CHANGED}).`
+);
 
 try {
   (world.afterEvents as any)?.playerLeave?.subscribe((ev: any) => {
     lastHit.delete(ev.playerId);
   });
-} catch {}
+} catch {
+  // Ignore subscription errors
+}

@@ -7,7 +7,7 @@ Implementation of Smart Glasses Addon for Minecraft.
 ## Features
 
 - [ ] Night Vision
-- [ ] Shows Block Names
+- [x] Shows Block Names
 - [ ] Shows Enemy Health
 - [ ] Shows Coordinates
 - [ ] Shows Biome
