@@ -2,7 +2,7 @@ import { system, world, Player, Entity, EquipmentSlot } from "@minecraft/server"
 
 // Config
 const MAX_DISTANCE = 4;
-const INTERVAL_TICKS = 1;
+const INTERVAL_TICKS = 2;//50ms per tick
 const ONLY_WHEN_CHANGED = true;
 const LOG_WHEN_NONE = false;
 const STEP = 0.25;
