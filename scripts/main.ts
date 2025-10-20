@@ -1,4 +1,4 @@
-import { system, world, Player, Entity } from "@minecraft/server";
+import { system, world, Player, Entity, EquipmentSlot } from "@minecraft/server";
 
 // Config
 const MAX_DISTANCE = 4;
@@ -8,6 +8,7 @@ const LOG_WHEN_NONE = false;
 const STEP = 0.25;
 const EYE_HEIGHT = 1.62;
 const SKIP_IF_STATIONARY = true;
+const REQUIRED_HELMET_TYPE = "smart_glasses:smart_glasses"; // Only run logic when player wears this
 
 const PASS_THROUGH_SET = new Set([
   "minecraft:air",
@@ -19,6 +20,49 @@ const PASS_THROUGH_SET = new Set([
 
 function isPassThrough(typeId: string): boolean {
   return PASS_THROUGH_SET.has(typeId);
+}
+
+function hasRequiredHelmet(player: Player): boolean {
+  const equip: any = (player as any).getComponent?.("minecraft:equippable");
+  if (!equip) return false;
+
+  let head: any = null;
+  let tried: string[] = [];
+  try {
+    head = equip.getEquipment?.(EquipmentSlot.Head);
+    tried.push("EquipmentSlot.Head");
+  } catch (e: any) {
+     return false;
+    //console.warn(`[TargetSight] Helmet check: EquipmentSlot.Head failed: ${e?.message || e}`);
+  }
+  
+  if (!head) {
+    try {
+      head = equip.getEquipment?.("head");
+      tried.push("head");
+    } catch (e: any) {
+      return false;
+      //console.warn(`[TargetSight] Helmet check: 'head' failed: ${e?.message || e}`);
+    }
+  }
+  
+  if (!head) {
+    try {
+      head = equip.getEquipment?.("slot.armor.head");
+      tried.push("slot.armor.head");
+    } catch (e: any) {
+       return false;
+      //console.warn(`[TargetSight] Helmet check: 'slot.armor.head' failed: ${e?.message || e}`);
+    }
+  }
+
+  if (!head) {
+    return false;
+  }
+
+  const ok = head.typeId === REQUIRED_HELMET_TYPE;
+  // console.warn(head.typeId, REQUIRED_HELMET_TYPE);
+  return ok;
 }
 
 const lastHit = new Map<string, string | null>();
@@ -49,6 +93,11 @@ function isPointInsideEntity(entity: Entity, x: number, y: number, z: number): b
 system.runInterval(() => {
   for (const player of world.getPlayers()) {
     try {
+      if (!hasRequiredHelmet(player)) {
+        // Optionally uncomment to debug filtering:
+        // console.warn(`[TargetSight] Skipping ${player.name} (no iron helmet).`);
+        continue;
+      }
       const dir = player.getViewDirection();
       const eye = player.location;
       const ox = eye.x;
