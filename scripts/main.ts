@@ -1,4 +1,5 @@
-import { Block, Entity, EquipmentSlot, Player, system, world } from "@minecraft/server";
+import { Entity, EquipmentSlot, Player, system, world } from "@minecraft/server";
+import { Lookable } from "./Lookable";
 
 // Config
 const MAX_DISTANCE = 4;
@@ -11,6 +12,8 @@ const SKIP_IF_STATIONARY = true;
 const REQUIRED_HELMET_TYPE = "smart_glasses:smart_glasses";
 
 const PASS_THROUGH_SET = new Set([
+  "minecraft:item",
+  "minecraft:xp_orb",
   "minecraft:air",
   "minecraft:water",
   "minecraft:lava",
@@ -53,43 +56,6 @@ interface LastState {
   dz: number;
 }
 const lastPlayerState = new Map<string, LastState>();
-
-function formatBlock(block: Block): string {
-  return `${formatTypeId(block.typeId)} @ ${block.location.x},${block.location.y},${block.location.z}`;
-}
-
-function formatEntity(entity: Entity): string {
-  return `${formatTypeId(entity.typeId)} ${formatEntityHealth(entity)}`;
-}
-
-function formatEntityHealth(entity: Entity): string {
-  const healthComponent = entity.getComponent("minecraft:health");
-  if (!healthComponent) {
-    return "(No HP)";
-  }
-  const currentHealth = Math.round(healthComponent.currentValue);
-  const maxHealth = Math.round(healthComponent.defaultValue);
-  return `(${currentHealth}/${maxHealth} HP)`;
-}
-
-function formatTypeId(id: string): string {
-  const [namespace, key] = id.split(":");
-  if (!namespace || !key) return id;
-
-  // Convert underscore-separated words to Title Case with spaces
-  const formattedKey = key
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-
-  // Convert namespace underscores to spaces, each word capitalized
-  const formattedNamespace = namespace
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-
-  return `${formattedKey} (${formattedNamespace})`;
-}
 
 function isPointInsideEntity(entity: Entity, x: number, y: number, z: number): boolean {
   const loc = entity.location;
@@ -158,6 +124,7 @@ function findHitEntity(
     if (lateralSq > 0.5) continue;
 
     if (isPointInsideEntity(ent, px, py, pz)) {
+      if (!ent || isPassThrough(ent.typeId)) return null;
       return ent;
     }
   }
@@ -227,11 +194,8 @@ system.runInterval(() => {
       if (ONLY_WHEN_CHANGED && current === prev) continue;
 
       if (current) {
-        if (hitEntity) {
-          console.warn(`[Smart Glasses] ${player.name} -> ${formatEntity(hitEntity)}`);
-        } else if (hitBlock) {
-          console.warn(`[Smart Glasses] ${player.name} -> ${formatBlock(hitBlock)}`);
-        }
+        const lookable = new Lookable(hitEntity || hitBlock);
+        console.warn(`[Smart Glasses] ${player.name} -> ${lookable.toString()}`);
       } else if (LOG_WHEN_NONE && prev !== null) {
         console.warn(`[Smart Glasses] ${player.name} -> (nothing)`);
       }
