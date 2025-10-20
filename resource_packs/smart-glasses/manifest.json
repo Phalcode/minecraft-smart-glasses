@@ -1,0 +1,29 @@
+{
+  "format_version": 2,
+  "header": {
+    "name": "Smart Glasses Mod - Resource Pack",
+    "description": "Smart Glasses Mod for Minecraft",
+    "uuid": "c4bc9d09-4e95-4e1c-9c7d-0f1e2ac4fb39",
+    "version": [1, 0, 0],
+    "min_engine_version": [1, 21, 0]
+  },
+  "metadata": {
+    "authors": ["Phalcode"],
+    "license": "Proprietary",
+    "url": "https://phalco.de"
+  },
+  "modules": [
+    {
+      "description": "Smart Glasses Mod - Resource Pack",
+      "type": "resources",
+      "uuid": "59a0f4f0-63c3-408c-b396-ad35292e21ea",
+      "version": [1, 0, 0]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "405b4070-6dd7-4b70-a355-1aa0fb91cf71",
+      "version": [1, 0, 0]
+    }
+  ]
+}
