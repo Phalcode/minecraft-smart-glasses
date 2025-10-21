@@ -12,6 +12,7 @@ const SKIP_IF_STATIONARY = true;
 const REQUIRED_HELMET_TYPE = "smart_glasses:smart_glasses";
 
 const PASS_THROUGH_SET = new Set([
+  "minecraft:arrow",
   "minecraft:item",
   "minecraft:xp_orb",
   "minecraft:air",
