@@ -68,7 +68,6 @@ export class Lookable {
   }
 
   private fetchBlockInventoryInfo(block: Block): { used: number; total: number } | undefined {
-    if (!block.typeId.includes("chest")) return undefined;
     try {
       const inventoryComp: any = (block as any).getComponent?.("minecraft:inventory");
       if (!inventoryComp) return undefined;
