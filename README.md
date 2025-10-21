@@ -6,12 +6,10 @@
 
 ## ✨ Features
 
-- Night Vision: Not Yet Implemented - See clearly in the darkest caves and nights
-- Shows Block Names: Implemented without GUI - Instantly identify any block you’re looking at
-- Shows Enemy Health: Implemented without GUI - Displays health bars for nearby enemies
+- Night Vision: Implemented - See clearly in the darkest caves and nights
+- Shows Block Names: Implemented - Instantly identify any block you’re looking at
+- Shows Enemy Health: Implemented - Displays health for any mob you’re looking at
 - Shows Coordinates: Not Yet Implemented - Know your exact position at all times
-- Shows Biome: Not Yet Implemented - Reveals the biome you’re currently in
-- Shows Light Level: Not Yet Implemented - Useful for mob-proofing your builds
 - Auto Tool Switch: Not Yet Implemented - Automatically picks the best tool in your hotbar
 - Chest Fill Level: Not Yet Implemented - See at a glance how full a chest is
 
