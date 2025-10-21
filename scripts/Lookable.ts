@@ -5,6 +5,7 @@ export class Lookable {
   namespace: string = "Minecraft";
   location: { x: number; y: number; z: number };
   health?: { current: number; max: number };
+  inventoryInfo?: { used: number; total: number };
 
   constructor(public readonly lookable: Entity | Block) {
     this.location = lookable.location;
@@ -12,6 +13,9 @@ export class Lookable {
 
     if (lookable instanceof Entity) {
       this.health = this.fetchEntityHealth(lookable);
+    } else {
+      // Block specific augmentation (e.g., chests)
+      this.inventoryInfo = this.fetchBlockInventoryInfo(lookable);
     }
   }
 
@@ -20,6 +24,11 @@ export class Lookable {
 
     if (this.health) {
       sb += ` (${this.health.current}/${this.health.max} HP)`;
+    }
+
+    if (this.inventoryInfo) {
+      const { used, total } = this.inventoryInfo;
+      sb += ` [Inv ${used}/${total}]`;
     }
 
     // Append integer coordinates (block space)
@@ -56,5 +65,24 @@ export class Lookable {
       return undefined;
     }
     return { current: Math.round(healthComponent.currentValue), max: Math.round(healthComponent.defaultValue) };
+  }
+
+  private fetchBlockInventoryInfo(block: Block): { used: number; total: number } | undefined {
+    if (!block.typeId.includes("chest")) return undefined;
+    try {
+      const inventoryComp: any = (block as any).getComponent?.("minecraft:inventory");
+      if (!inventoryComp) return undefined;
+      const container = inventoryComp.container;
+      if (!container) return undefined;
+      const total = container.size ?? 0;
+      let used = 0;
+      for (let i = 0; i < total; i++) {
+        const item = container.getItem(i);
+        if (item) used++;
+      }
+      return { used, total };
+    } catch {
+      return undefined;
+    }
   }
 }
