@@ -1,0 +1,31 @@
+{
+  "format_version": "1.12",
+  "minecraft:recipe_shaped": {
+    "description": {
+      "identifier": "smart_glasses:smart_glasses"
+    },
+    "tags": ["crafting_table"],
+    "pattern": ["# #", "/R/", "QDQ"],
+    "key": {
+      "#": {
+        "item": "minecraft:netherite_scrap"
+      },
+      "/": {
+        "item": "minecraft:blaze_rod"
+      },
+      "R": {
+        "item": "minecraft:redstone"
+      },
+      "Q": {
+        "item": "minecraft:quartz"
+      },
+      "D": {
+        "item": "minecraft:diamond"
+      }
+    },
+    "result": {
+      "item": "smart_glasses:smart_glasses",
+      "count": 1
+    }
+  }
+}
