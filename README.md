@@ -1,21 +1,19 @@
 # Smart Glasses 🕶️
 
-**Smart Glasses** is a _vanilla-friendly futuristic Minecraft: Bedrock Edition addon_ that brings an immersive, high‑tech twist to your Minecraft world — without breaking the original aesthetic. Equip them to access real-time world data right on your screen.
+**Smart Glasses** is a _vanilla-friendly futuristic Minecraft: Bedrock Edition addon_ that brings an immersive, high‑tech twist to your Minecraft world, without altering the original game. Equip them to access real-time world data right on your screen.
 
 ![ModJam Banner](https://github.com/Phalcode/minecraft-smart-glasses/blob/master/img/modjam.png?raw=true)
 
 ## ✨ Features
 
-| Feature            |                  Status | Description                                      |
-| ------------------ | ----------------------: | ------------------------------------------------ |
-| Night Vision       |     Not Yet Implemented | See clearly in the darkest caves and nights      |
-| Shows Block Names  | Implemented without GUI | Instantly identify any block you’re looking at   |
-| Shows Enemy Health | Implemented without GUI | Displays health bars for nearby enemies          |
-| Shows Coordinates  |     Not Yet Implemented | Know your exact position at all times            |
-| Shows Biome        |     Not Yet Implemented | Reveals the biome you’re currently in            |
-| Shows Light Level  |     Not Yet Implemented | Useful for mob-proofing your builds              |
-| Auto Tool Switch   |     Not Yet Implemented | Automatically picks the best tool in your hotbar |
-| Chest Fill Level   |     Not Yet Implemented | See at a glance how full a chest is              |
+- Night Vision: Not Yet Implemented - See clearly in the darkest caves and nights
+- Shows Block Names: Implemented without GUI - Instantly identify any block you’re looking at
+- Shows Enemy Health: Implemented without GUI - Displays health bars for nearby enemies
+- Shows Coordinates: Not Yet Implemented - Know your exact position at all times
+- Shows Biome: Not Yet Implemented - Reveals the biome you’re currently in
+- Shows Light Level: Not Yet Implemented - Useful for mob-proofing your builds
+- Auto Tool Switch: Not Yet Implemented - Automatically picks the best tool in your hotbar
+- Chest Fill Level: Not Yet Implemented - See at a glance how full a chest is
 
 ## 🖼️ Screenshots
 
