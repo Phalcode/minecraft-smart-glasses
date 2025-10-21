@@ -1,4 +1,4 @@
-import { Entity, EquipmentSlot, Player, system, world } from "@minecraft/server";
+import { Entity, EquipmentSlot, Player, TicksPerSecond, system, world } from "@minecraft/server";
 import { Lookable } from "./Lookable";
 
 // Config
@@ -160,6 +160,9 @@ system.runInterval(() => {
       const dx = dir.x;
       const dy = dir.y;
       const dz = dir.z;
+
+      // Apply night vision
+      player.addEffect("minecraft:night_vision", TicksPerSecond * 15, { showParticles: false });
 
       if (SKIP_IF_STATIONARY && ONLY_WHEN_CHANGED && !hasPlayerMovedOrRotated(player, dx, dy, dz, ox, oy, oz)) {
         continue;
