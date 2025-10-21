@@ -1,19 +1,53 @@
-# Smart Glasses
+# Smart Glasses 🕶️
 
-Implementation of Smart Glasses Addon for Minecraft.
+**Smart Glasses** is a _vanilla-friendly futuristic Minecraft: Bedrock Edition addon_ that brings an immersive, high‑tech twist to your Minecraft world — without breaking the original aesthetic. Equip them to access real-time world data right on your screen.
 
-**WARNING: This addon is work in progress and is not ready for use.**
+![ModJam Banner](./img/modjam.png)
 
-## Features
+## ✨ Features
 
-- [ ] Night Vision
-- [x] Shows Block Names
-- [ ] Shows Enemy Health
-- [ ] Shows Coordinates
-- [ ] Shows Biome
-- [ ] Shows Light Level
-- [ ] Automatically Switches Tools in Hotbar
-- [ ] Shows Chest Fill Level
+| Feature            |         Status          | Description                                      |
+| :----------------- | :---------------------: | :----------------------------------------------- |
+| Night Vision       |   Not Yet Implemented   | See clearly in the darkest caves and nights      |
+| Shows Block Names  | Implemented without GUI | Instantly identify any block you’re looking at   |
+| Shows Enemy Health | Implemented without GUI | Displays health bars for nearby enemies          |
+| Shows Coordinates  |   Not Yet Implemented   | Know your exact position at all times            |
+| Shows Biome        |   Not Yet Implemented   | Reveals the biome you’re currently in            |
+| Shows Light Level  |   Not Yet Implemented   | Useful for mob-proofing your builds              |
+| Auto Tool Switch   |   Not Yet Implemented   | Automatically picks the best tool in your hotbar |
+| Chest Fill Level   |   Not Yet Implemented   | See at a glance how full a chest is              |
+
+## 🖼️ Screenshots
+
+![Screenshot](./img/screenshot_1.png)
+
+## ⚙️ Installation
+
+1. Download the [latest release](https://github.com/Phalcode/minecraft-smart-glasses/releases/latest).
+2. Open the `.mcaddon` file to install it into your Minecraft client.
+3. In your world settings, **activate both the Behavior Pack and the Resource Pack**.
+4. Launch your world and enjoy the future of survival!
+
+## 🧠 Usage
+
+### Obtaining the Smart Glasses
+
+The Smart Glasses are considered a **mid‑game utility item**.  
+They can be crafted once you have the right materials:
+
+**Recipe:**
+
+![Recipe](./img/recipe.png)
+
+### Activating the Smart Glasses
+
+Simply **equip the Smart Glasses** in your armor slot.  
+Once worn, all enabled HUD features will automatically appear on your screen.
+
+## 💬 Feedback & Contributions
+
+Have ideas or feature suggestions?  
+Feel free to open an issue or contribute on [GitHub](https://github.com/Phalcode/minecraft-smart-glasses).
 
 ## Development
 
