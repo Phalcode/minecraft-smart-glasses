@@ -22,6 +22,11 @@ export class Lookable {
       sb += ` (${this.health.current}/${this.health.max} HP)`;
     }
 
+    // Append integer coordinates (block space)
+    const x = Math.floor(this.location.x);
+    const y = Math.floor(this.location.y);
+    const z = Math.floor(this.location.z);
+    sb += ` @${x},${y},${z}`;
     return sb;
   }
 
