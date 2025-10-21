@@ -1,6 +1,7 @@
 import { Block, Entity } from "@minecraft/server";
 
 export class Lookable {
+  type: "Entity" | "Block" | "Unknown" = "Unknown";
   name: string = "Unknown";
   namespace: string = "Minecraft";
   location: { x: number; y: number; z: number };
@@ -13,29 +14,32 @@ export class Lookable {
 
     if (lookable instanceof Entity) {
       this.health = this.fetchEntityHealth(lookable);
+      this.type = "Entity";
     } else {
       // Block specific augmentation (e.g., chests)
+      this.type = "Block";
       this.inventoryInfo = this.fetchBlockInventoryInfo(lookable);
     }
   }
 
   public toString(): string {
-    let sb = `(${this.namespace}) ${this.name}`; //[${this.lookable.typeId}];
+    let sb = ` ${this.type}: ${this.name}`; //[${this.lookable.typeId}];
 
-    if (this.health) {
-      sb += ` (${this.health.current}/${this.health.max} HP)`;
-    }
-
-    if (this.inventoryInfo) {
-      const { used, total } = this.inventoryInfo;
-      sb += ` [Inv ${used}/${total}]`;
-    }
-
+    sb += `\nSource: ${this.namespace}`;
     // Append integer coordinates (block space)
     const x = Math.floor(this.location.x);
     const y = Math.floor(this.location.y);
     const z = Math.floor(this.location.z);
-    sb += ` @${x},${y},${z}`;
+    sb += `\nCoordinates (XYZ): ${x}, ${y}, ${z}`;
+
+    if (this.health) {
+      sb += `\nHealth: ${this.health.current}/${this.health.max} HP`;
+    }
+
+    if (this.inventoryInfo) {
+      const { used, total } = this.inventoryInfo;
+      sb += `\nInventory: ${used}/${total} Slots`;
+    }
     return sb;
   }
 

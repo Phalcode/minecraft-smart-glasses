@@ -36,7 +36,7 @@
             "smart_glasses_display@smart_glasses_hud.main": {
               "anchor_from": "bottom_left",
               "anchor_to": "bottom_left",
-              "offset": [10, -10]
+              "offset": [1, -1]
             }
           }
         ]

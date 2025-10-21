@@ -32,17 +32,10 @@
                 "type": "stack_panel",
                 "orientation": "horizontal",
                 "size": ["100%c", "100%cm"],
-                "min_size": ["100%c", 20],
-                "offset": [5, 4],
+                "min_size": ["100%c", 0],
+                "offset": [0, 0],
 
                 "controls": [
-                  {
-                    "looking_at_label@smart_glasses_hud.label": {
-                      "text": "Looking at: ",
-                      "anchor_from": "top_left",
-                      "anchor_to": "top_left"
-                    }
-                  },
                   {
                     "block_name_label@smart_glasses_hud.label": {
                       "text": "#block_name",
@@ -59,21 +52,6 @@
                           "binding_type": "view",
                           "source_property_name": "(#title_text - ('%.10s' * #title_text))",
                           "target_property_name": "#block_name"
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "debug_raw_label@smart_glasses_hud.label": {
-                      "text": "#title_text",
-                      "color": [1.0, 0.3, 0.3],
-                      "anchor_from": "top_left",
-                      "anchor_to": "top_left",
-                      "bindings": [
-                        {
-                          "binding_type": "global",
-                          "binding_name": "#hud_title_text_string",
-                          "binding_name_override": "#title_text"
                         }
                       ]
                     }

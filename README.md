@@ -6,16 +6,19 @@
 
 ## ✨ Features
 
-- Night Vision: Implemented - See clearly in the darkest caves and nights
-- Shows Block Names: Implemented - Instantly identify any block you’re looking at
-- Shows Enemy Health: Implemented - Displays health for any mob you’re looking at
-- Shows Coordinates: Not Yet Implemented - Know your exact position at all times
-- Auto Tool Switch: Not Yet Implemented - Automatically picks the best tool in your hotbar
-- Chest Fill Level: Not Yet Implemented - See at a glance how full a chest is
+- Night Vision: See clearly in the darkest caves and nights
+- Block/Entity Names: Instantly identify any block you’re looking at
+- Enemy Health: Displays health for any mob you’re looking at
+- Coordinates: Know an exact position at all times
+- Container Fill Level: See at a glance how full a chest is
 
 ## 🖼️ Screenshots
 
 ![Screenshot](https://github.com/Phalcode/minecraft-smart-glasses/blob/master/img/screenshot_1.png?raw=true)
+![Screenshot](https://github.com/Phalcode/minecraft-smart-glasses/blob/master/img/screenshot_2.png?raw=true)
+![Screenshot](https://github.com/Phalcode/minecraft-smart-glasses/blob/master/img/screenshot_3.png?raw=true)
+![Screenshot](https://github.com/Phalcode/minecraft-smart-glasses/blob/master/img/screenshot_4.png?raw=true)
+![Screenshot](https://github.com/Phalcode/minecraft-smart-glasses/blob/master/img/screenshot_5.png?raw=true)
 
 ## ⚙️ Installation
 
