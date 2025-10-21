@@ -34,9 +34,9 @@
         "value": [
           {
             "smart_glasses_display@smart_glasses_hud.main": {
-              "anchor_from": "top_left",
-              "anchor_to": "top_left",
-              "offset": [10, 10]
+              "anchor_from": "bottom_left",
+              "anchor_to": "bottom_left",
+              "offset": [10, -10]
             }
           }
         ]
