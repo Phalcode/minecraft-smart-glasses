@@ -16,7 +16,7 @@ export class Lookable {
   }
 
   public toString(): string {
-    let sb = `(${this.namespace}) ${this.name} [${this.lookable.typeId}]`;
+    let sb = `(${this.namespace}) ${this.name}`; //[${this.lookable.typeId}];
 
     if (this.health) {
       sb += ` (${this.health.current}/${this.health.max} HP)`;

@@ -202,7 +202,23 @@ system.runInterval(() => {
 
       if (current) {
         const lookable = new Lookable(hitEntity || hitBlock);
-        console.warn(`[Smart Glasses] ${player.name} -> ${lookable.toString()}`);
+        //console.warn(`[Smart Glasses] ${player.name} -> ${lookable.toString()}`);
+        try {
+          // Use Molang-compatible encoding similar to the sample pack
+          const blockName = lookable.toString();
+          // Format: _sglss:<type>:<name>
+          // Type: A for blocks, B for entities
+          const entityType = hitEntity ? "B" : "A";
+          const encodedTitle = `_sglss:${entityType}:${blockName}`;
+
+          player.onScreenDisplay.setTitle(encodedTitle, {
+            fadeInDuration: 0,
+            fadeOutDuration: 0,
+            stayDuration: 100,
+          });
+        } catch (error) {
+          console.warn("HUD Update Error:", error);
+        }
       } else if (LOG_WHEN_NONE && prev !== null) {
         console.warn(`[Smart Glasses] ${player.name} -> (nothing)`);
       }

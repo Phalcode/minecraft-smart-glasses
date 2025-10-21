@@ -1,0 +1,99 @@
+{
+  "namespace": "smart_glasses_hud",
+
+  "label": {
+    "type": "label",
+    "size": ["default", "default"],
+    "font_scale_factor": 0.6,
+    "localize": false,
+    "shadow": true,
+    "color": [0.5, 1.0, 0.5],
+    "layer": 102
+  },
+
+  "main@common.empty_panel": {
+    "size": ["100%cm", "100%cm"],
+    "layer": 100,
+
+    "controls": [
+      {
+        "background": {
+          "type": "image",
+          "texture": "textures/ui/purpleBorder",
+          "keep_ratio": false,
+          "bilinear": false,
+          "alpha": 0.75,
+          "size": ["100%c + 10px", "100%c + 8px"],
+          "layer": 101,
+
+          "controls": [
+            {
+              "content_panel": {
+                "type": "stack_panel",
+                "orientation": "horizontal",
+                "size": ["100%c", "100%cm"],
+                "min_size": ["100%c", 20],
+                "offset": [5, 4],
+
+                "controls": [
+                  {
+                    "looking_at_label@smart_glasses_hud.label": {
+                      "text": "Looking at: ",
+                      "anchor_from": "top_left",
+                      "anchor_to": "top_left"
+                    }
+                  },
+                  {
+                    "block_name_label@smart_glasses_hud.label": {
+                      "text": "#block_name",
+                      "anchor_from": "top_left",
+                      "anchor_to": "top_left",
+
+                      "bindings": [
+                        {
+                          "binding_type": "global",
+                          "binding_name": "#hud_title_text_string",
+                          "binding_name_override": "#title_text"
+                        },
+                        {
+                          "binding_type": "view",
+                          "source_property_name": "(#title_text - ('%.10s' * #title_text))",
+                          "target_property_name": "#block_name"
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "debug_raw_label@smart_glasses_hud.label": {
+                      "text": "#title_text",
+                      "color": [1.0, 0.3, 0.3],
+                      "anchor_from": "top_left",
+                      "anchor_to": "top_left",
+                      "bindings": [
+                        {
+                          "binding_type": "global",
+                          "binding_name": "#hud_title_text_string",
+                          "binding_name_override": "#title_text"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ],
+
+    "bindings": [
+      {
+        "binding_type": "global",
+        "binding_name": "#hud_title_text_string",
+        "binding_name_override": "#title_text"
+      }
+    ],
+    "visible": "true",
+    "ignored": "false"
+  }
+}
