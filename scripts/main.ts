@@ -12,14 +12,20 @@ const SKIP_IF_STATIONARY = true;
 const REQUIRED_HELMET_TYPE = "smart_glasses:smart_glasses";
 
 const PASS_THROUGH_SET = new Set([
-  "minecraft:arrow",
-  "minecraft:item",
-  "minecraft:xp_orb",
   "minecraft:air",
-  "minecraft:water",
-  "minecraft:lava",
-  "minecraft:flowing_water",
+  "minecraft:arrow",
+  "minecraft:bubble_column",
+  "minecraft:falling_block",
+  "minecraft:fishing_bobber",
+  "minecraft:fishing_hook",
   "minecraft:flowing_lava",
+  "minecraft:flowing_water",
+  "minecraft:item",
+  "minecraft:lava",
+  "minecraft:lightning_bolt",
+  "minecraft:powder_snow",
+  "minecraft:water",
+  "minecraft:xp_orb",
 ]);
 
 function isPassThrough(typeId: string): boolean {
