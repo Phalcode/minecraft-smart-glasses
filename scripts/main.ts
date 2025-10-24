@@ -222,8 +222,14 @@ system.runInterval(() => {
         } catch (error) {
           console.warn("HUD Update Error:", error);
         }
-      } else if (LOG_WHEN_NONE && prev !== null) {
-        console.warn(`[Smart Glasses] ${player.name} -> (nothing)`);
+      } else {
+        // Player is looking at nothing (air)
+        if (prev !== null) {
+          // Clear the on-screen HUD/title so the UI hides when looking at the sky
+          try {
+            player.onScreenDisplay.setTitle("_sglss:H", { fadeInDuration: 0, fadeOutDuration: 0, stayDuration: 0 });
+          } catch (error) {}
+        }
       }
 
       lastHit.set(player.id, current);

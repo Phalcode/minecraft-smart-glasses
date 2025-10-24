@@ -23,6 +23,18 @@
           "keep_ratio": false,
           "bilinear": false,
           "alpha": 0.75,
+          "bindings": [
+            {
+              "binding_type": "view",
+              "source_property_name": "((#title_text - ('%.10s' * #title_text)) != ' ') * 1",
+              "target_property_name": "#visible"
+            },
+            {
+              "binding_type": "view",
+              "source_property_name": "((#title_text - ('%.10s' * #title_text)) != ' ') * 0.75",
+              "target_property_name": "alpha"
+            }
+          ],
           "size": ["100%c + 10px", "100%c + 8px"],
           "layer": 101,
 
@@ -69,9 +81,14 @@
         "binding_type": "global",
         "binding_name": "#hud_title_text_string",
         "binding_name_override": "#title_text"
+      },
+      {
+        "binding_type": "view",
+        "source_property_name": "(not ('%.8s' * #title_text = '_sglss:H'))",
+        "target_property_name": "#visible"
       }
     ],
-    "visible": "true",
-    "ignored": "false"
+
+    "ignored": false
   }
 }
